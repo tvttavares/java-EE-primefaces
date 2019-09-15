@@ -1,2 +1,2 @@
 # java-EE-primefaces
-Curso Java EE com CDI, JPA e PrimeFaces
+Curso algaworks "Sistemas Comerciais Java EE com CDI, JPA e PrimeFaces"
