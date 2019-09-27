@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<style>
+.sem-bordas td {
+	border: none;
+	padding: 5px;
+}
+</style>
+	<script>
+		PrimeFaces.locales['pt'] = {
+			closeText : 'Fechar',
+			prevText : 'Anterior',
+			nextText : 'Próximo',
+			currentText : 'Começo',
+			monthNames : [ 'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio',
+					'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro',
+					'Novembro', 'Dezembro' ],
+			monthNamesShort : [ 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+					'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez' ],
+			dayNames : [ 'Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta',
+					'Sexta', 'Sábado' ],
+			dayNamesShort : [ 'Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb' ],
+			dayNamesMin : [ 'D', 'S', 'T', 'Q', 'Q', 'S', 'S' ],
+			weekHeader : 'Semana',
+			firstDay : 0,
+			isRTL : false,
+			showMonthAfterYear : false,
+			yearSuffix : '',
+			timeOnlyTitle : 'Só Horas',
+			timeText : 'Tempo',
+			hourText : 'Hora',
+			minuteText : 'Minuto',
+			secondText : 'Segundo',
+			ampm : false,
+			month : 'Mês',
+			week : 'Semana',
+			day : 'Dia',
+			allDayText : 'Todo o Dia'
+		};
+	</script>
+
+	<p:outputLabel value="Cadastro de contratos de treinamentos"
+		style="font-weight:bold ; font-size: 30px" />
+
+	<br />
+
+	<p:outputLabel
+		value="______________________________________________________________" />
+	<br />
+	<br />
+</h:head>
+<h:body>
+
+	<h:form id="frm">
+		<p:messages />
+		<p:tabView orientation="top" effect="fade" effectDuration="fast"
+			activeIndex="3">
+			<p:tab title="Dados principais" disabled="false">
+				<h:panelGrid columns="2" cellpadding="4">
+					<p:outputLabel value="Razao social" for="razaoSocial" />
+					<p:inputText id="razaoSocial" required="true"
+						value="#{cadastroContrato.razaoSocial}" />
+
+					<p:outputLabel value="CNPJ" for="cnpj" />
+					<p:inputMask id="cnpj" value="#{cadastroContrato.cnpj}"
+						mask="99.999.999/9999-99" />
+
+					<p:outputLabel value="Cidade do contrato" for="cidadeContrato" />
+					<p:autoComplete id="cidadeContrato"
+						value="#{cadastroContrato.cidadeContrato}"
+						completeMethod="#{cadastroContrato.sugerirCidade}"
+						forceSelection="true" converter="cidade" var="p"
+						itemLabel="#{p.nome}" itemValue="#{p}" required="true" />
+
+					<p:outputLabel value="Modalidade" for="modalidade" />
+					<p:selectOneRadio id="modalidade"
+						value="#{cadastroContrato.modalidade}" styleClass="sem-bordas">
+						<f:selectItem itemLabel="EAD" itemValue="E" />
+						<f:selectItem itemLabel="Presencial" itemValue="P" />
+					</p:selectOneRadio>
+				</h:panelGrid>
+			</p:tab>
+			<p:tab title="Contrato" disabled="false">
+				<h:panelGrid columns="2" cellpadding="4">
+					<p:outputLabel value="Data do contrato" for="dataContrato" />
+					<p:calendar id="dataContrato" required="true"
+						value="#{cadastroContrato.dataContrato}" pattern="dd/MM/yyyy"
+						readonlyInput="true" navigator="false" pages="1"
+						maxdate="#{cadastroContrato.dataHoje}" locale="pt" />
+
+					<p:outputLabel value="Valor do contrato" for="valorContrato" />
+					<p:inputMask id="valorContrato"
+						value="#{cadastroContrato.valorContrato}" mask="999,99" />
+
+					<p:outputLabel value="Metodo de Pagameto" for="metodoPagamento" />
+					<p:selectOneMenu id="metodoPagamento"
+						value="#{cadastroContrato.metodoPagamento}">
+						<p:ajax event="change" process="@this" update="formaPagamento"
+							listener="#{cadastroContrato.carregarFormasPagamento}" />
+
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{cadastroContrato.metodosPagamento}"
+							var="metodoPagamento" itemValue="#{metodoPagamento}"
+							itemLabel="#{metodoPagamento}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Forma de pagamento" for="formaPagamento" />
+					<p:selectOneMenu id="formaPagamento"
+						value="#{cadastroContrato.formaPagamento}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{cadastroContrato.formasPagamento}"
+							var="formaPagamento" itemLabel="#{formaPagamento}"
+							itemValue="#{formaPagamento}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:tab>
+			<p:tab title="Cursos" disabled="false">
+				<p:outputLabel value="Cursos contratados" for="cursosContratados"
+					style="font-weight:bold ; font-size: 25px" />
+				<p:selectManyCheckbox id="cursosContratados"
+					value="#{cadastroContrato.cursosContratados}" required="true"
+					layout="pageDirection">
+					<f:selectItem itemLabel="Fundamentos Java e Orientacao a Objetos"
+						itemValue="1" />
+					<f:selectItem itemLabel="Desenvolvimento Web com JSF 2"
+						itemValue="2" />
+					<f:selectItem
+						itemLabel="Persisntecia de dados com JPA 2 e Hibernate"
+						itemValue="3" />
+					<f:selectItem itemLabel="Gerenciamento Agil de Projetos com Scrum"
+						itemValue="4" />
+				</p:selectManyCheckbox>
+			</p:tab>
+			<p:tab title="Dados de contratos" disabled="false">
+				<p:dataTable value="#{cadastroContratoBean.cadastroContratos}"
+					var="contratos" rows="10" paginator="true"
+					paginatorPosition="bottom" rowsPerPageTemplate="10, 20, 30"
+					paginatorAlwaysVisible="false">
+					<p:column headerText="Razao Social" style="text-align: center">
+						<h:outputText value="#{contratos.razaoSocial}" />
+					</p:column>
+					<p:column headerText="CNPJ" style="text-align: center">
+						<h:outputText value="#{contratos.cnpj}" />
+					</p:column>
+					<p:column headerText="Cidade do contrato"
+						style="text-align: center">
+						<h:outputText value="#{contratos.cidadeContrato.nome}" />
+					</p:column>
+					<p:column headerText="Modalidade" style="text-align: center">
+						<h:outputText value="#{contratos.modalidade}" />
+					</p:column>
+					<p:column headerText="Data do Contrato" style="text-align: center">
+						<h:outputText value="#{contratos.dataContrato}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Valor do contrato" style="text-align: center">
+						<h:outputText value="#{contratos.valorContrato}" />
+					</p:column>
+					<p:column headerText="Metodo de Pagamento"
+						style="text-align: center">
+						<h:outputText value="#{contratos.metodoPagamento}" />
+					</p:column>
+					<p:column headerText="Forma de Pagamento"
+						style="text-align: center">
+						<h:outputText value="#{contratos.formaPagamento}" />
+					</p:column>
+					<p:column headerText="Cursos contratados"
+						style="text-align: center">
+						<h:outputText value="#{contratos.cursosContratados}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+		</p:tabView>
+
+		<br />
+		<br />
+
+		<p:commandButton value="Cadastrar"
+			action="#{cadastroContrato.cadastrar}" update="@form" />
+	</h:form>
+
+</h:body>
+</html>
