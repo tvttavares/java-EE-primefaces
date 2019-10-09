@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</h:head>
+<h:body>
+
+	<script>
+		function tratarInclusaoCliente(args) {
+			if (!args.validationFailed) {
+				inclusaoClienteDialog.hide();
+			}
+		}
+	</script>
+
+	<h:form id="frm">
+		<p:growl autoUpdate="true" for="destinoExclusao" />
+
+		<p:commandButton value="Adicionar Cliente" style="margin-top:10px;"
+			onclick="inclusaoClienteDialog.show(); return false;" />
+
+		<p:spacer />
+
+		<p:dataTable id="tabelaCliente" value="#{clienteBean.clientes}"
+			var="clientes" emptyMessage="Nenhum cliente cadastrado!"
+			style="margin-top:10px;">
+			<p:column headerText="Nome" style="width: 150px;">
+				<h:outputText value="#{clientes.nome}" />
+			</p:column>
+
+			<p:column headerText="Telefone" style="width: 100px;">
+				<h:outputText value="#{clientes.telefone}" />
+			</p:column>
+
+			<p:column style="width: 45px; text-align: center;">
+				<p:commandButton icon="ui-icon-trash" title="Excluir"
+					oncomplete="exclusaoClienteDialog.show(); return false;"
+					process="@this">
+					<f:setPropertyActionListener
+						target="#{clienteBean.clienteSelecionado}" value="#{clientes}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+		<p:dialog header="Inclusao de Cliente"
+			widgetVar="inclusaoClienteDialog" resizable="false" modal="true">
+			<h:panelGroup id="inclusaoPanel">
+				<p:messages />
+
+				<p:panelGrid columns="2">
+					<p:outputLabel value="Nome" for="nome" />
+					<p:inputText id="nome" value="#{clienteBean.novoCliente.nome}"
+						required="true" requiredMessage="Campo Nome eh obrigatorio" />
+
+					<p:outputLabel value="Telefone" for="telefone" />
+					<p:inputMask mask="(99) 99999-9999" id="telefone"
+						value="#{clienteBean.novoCliente.telefone}" size="14"
+						maxlength="14" required="true"
+						requiredMessage="Campo Telefone eh obrigatorio" />
+
+					<p:outputLabel />
+					<p:commandButton value="incluir" icon="ui-icon-plus"
+						action="#{clienteBean.incluirCliente}"
+						update="tabelaCliente inclusaoPanel"
+						oncomplete="tratarInclusaoCliente(args)" />
+				</p:panelGrid>
+			</h:panelGroup>
+		</p:dialog>
+
+		<p:confirmDialog header="Exclusao de Cliente"
+			widgetVar="exclusaoClienteDialog"
+			message="Tem certeza que deseja exlcuir o cliente?">
+			<p:commandButton value="Sim" update="tabelaCliente"
+				actionListener="#{clienteBean.excluirCliente}" process="@this"
+				oncomplete="exclusaoClienteDialog.hide(); return false;" />
+
+			<p:commandButton value="Nao" update="tabelaCliente"
+				oncomplete="exclusaoClienteDialog.hide(); return false;" />
+
+		</p:confirmDialog>
+
+	</h:form>
+
+</h:body>
+</html>
