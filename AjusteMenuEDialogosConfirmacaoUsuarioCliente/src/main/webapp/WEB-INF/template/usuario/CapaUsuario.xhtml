@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="2" style="width: 100%; margin-top: 20px"
+		columnClasses="rotulo, campo, rotulo, campo">
+		<p:outputLabel value="Nome" />
+		<p:inputText size="40" />
+
+		<p:outputLabel value="E-mail" />
+		<p:inputText size="40" />
+
+		<p:outputLabel value="Senha" />
+		<p:password size="20" />
+	</p:panelGrid>
+
+	<br />
+
+	<p:panelGrid columns="2">
+		<p:selectOneMenu id="subCategoria">
+			<f:selectItem itemLabel="Administradores" />
+		</p:selectOneMenu>
+		<p:commandButton value="Adicionar grupo" id="botaoAdicionarGrupo" />
+	</p:panelGrid>
+
+	<p:dataTable id="grupoTable" value="#{cadastroUsuarioBean.itens}"
+		var="grupo" style="margin-top: 20px"
+		emptyMessage="Nenhum pedido encontrado." rows="20" paginator="true"
+		paginatorAlwaysVisible="false" paginatorPosition="bottom">
+
+		<p:column headerText="Grupo" style="text-align: left; width: 5000px">
+			<h:outputText value="Auxiliares" />
+		</p:column>
+
+		<p:column style="text-align: right; width: 50px">
+			<p:commandButton icon="ui-icon-circle-close" title="Excluir"
+				oncomplete="exclusaoGrupoDialog.show(); return false;" />
+
+		</p:column>
+	</p:dataTable>
+
+	<p:confirmDialog header="Exclusao de Grupo"
+		widgetVar="exclusaoGrupoDialog"
+		message="Tem certeza que deseja exlcuir o grupo?">
+		<p:commandButton value="Sim" update="grupoTable" process="@this"
+			oncomplete="exclusaoGrupoDialog.hide(); return false;" />
+
+		<p:commandButton value="Nao" update="grupoTable"
+			oncomplete="exclusaoGrupoDialog.hide(); return false;" />
+
+	</p:confirmDialog>
+
+</ui:composition>
