@@ -1,0 +1,9 @@
+.classpath
+.settings
+.project
+target
+.idea/libraries
+.idea/artifacts
+.idea/dictionaries
+.idea/*.xml
+*.iml
