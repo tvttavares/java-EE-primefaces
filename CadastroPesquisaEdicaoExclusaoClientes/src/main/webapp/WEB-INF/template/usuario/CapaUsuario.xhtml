@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:panelGrid columns="2" style="width: 100%; margin-top: 20px"
+		columnClasses="rotulo, campo, rotulo, campo">
+		<p:outputLabel value="Nome" for="nome" />
+		<p:inputText id="nome" size="40"
+			value="#{cadastroUsuarioBean.usuario.nome}" />
+
+		<p:outputLabel value="E-mail" for="email" />
+		<p:inputText id="email" size="40"
+			value="#{cadastroUsuarioBean.usuario.email}" />
+
+		<p:outputLabel value="Senha" for="senha" />
+		<p:password id="senha" size="20"
+			value="#{cadastroUsuarioBean.usuario.senha}" />
+	</p:panelGrid>
+
+	<br />
+
+	<h:form id="formGrupo">
+		<p:panelGrid columns="2">
+			<p:selectOneMenu id="grupo" value="#{cadastroUsuarioBean.grupo}">
+				<f:selectItem itemLabel="Selecione o grupo" />
+				<f:selectItems value="#{cadastroUsuarioBean.gruposUsuario}"
+					var="grupo" itemValue="#{grupo}" itemLabel="#{grupo.nome}" />
+			</p:selectOneMenu>
+			<p:commandButton value="Adicionar grupo" id="botaoAdicionarGrupo"
+				action="#{cadastroUsuarioBean.adicionarGrupo}"
+				update="grupoTable grupo" />
+		</p:panelGrid>
+
+		<p:dataTable id="grupoTable"
+			value="#{cadastroUsuarioBean.usuario.grupos}" var="grupo"
+			style="margin-top: 20px"
+			emptyMessage="Nenhum grupo associado ao usuario" rows="20"
+			paginator="true" paginatorAlwaysVisible="false"
+			paginatorPosition="bottom">
+
+			<p:column headerText="Grupo" style="text-align: left; width: 5000px">
+				<h:outputText value="#{grupo.nome}" />
+			</p:column>
+
+			<p:column style="text-align: right; width: 50px">
+				<p:commandButton icon="ui-icon-trash" title="Excluir"
+					action="#{cadastroUsuarioBean.removerGrupo}" process="@this"
+					update="grupoTable" >
+					<f:setPropertyActionListener
+							target="#{cadastroUsuarioBean.grupo}"
+							value="#{grupo}" />
+					</p:commandButton>
+			</p:column>
+		</p:dataTable>
+
+	</h:form>
+
+</ui:composition>
