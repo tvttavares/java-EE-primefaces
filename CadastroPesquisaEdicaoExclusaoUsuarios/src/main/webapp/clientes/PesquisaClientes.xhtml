@@ -1,0 +1,66 @@
+<ui:composition template="/WEB-INF/template/LayoutPadrao.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="titulo">Pesquisa de pedidos</ui:define>
+
+	<ui:define name="corpo">
+		<h:form>
+			<h1>Pesquisa de clientes</h1>
+
+			<p:toolbar style="margin-top: 20px">
+				<p:toolbarGroup>
+					<p:commandButton value="Pesquisar" />
+				</p:toolbarGroup>
+				<p:toolbarGroup align="right">
+					<p:button value="Novo" outcome="/clientes/CadastroCliente" />
+				</p:toolbarGroup>
+			</p:toolbar>
+
+			<p:panelGrid columns="2" id="painel"
+				style="width: 100%; margin-top: 20px">
+				<p:outputLabel value="CPF/CNPJ" />
+				<p:inputText size="40" />
+
+				<p:outputLabel value="Nome" />
+				<p:inputText size="60" />
+			</p:panelGrid>
+
+			<p:dataTable id="clientesTable"
+				value="#{pesquisaClientesBean.clientesFiltrados}" var="cliente"
+				style="margin-top: 20px" emptyMessage="Nenhum pedido encontrado."
+				rows="20" paginator="true" paginatorAlwaysVisible="false"
+				paginatorPosition="bottom">
+				<p:column headerText="Nome" style="text-align: left">
+					<h:outputText value="Supermercado João das Couves LTDA" />
+				</p:column>
+				<p:column headerText="Tipo" style="text-align: left; width: 200px">
+					<h:outputText value="Juridica" />
+				</p:column>
+				<p:column headerText="CPF/CNPJ"
+					style="text-align: left; width: 200px">
+					<h:outputText value="330.548.169-77" />
+				</p:column>
+				<p:column style="text-align: left; width: 50px">
+					<p:button icon="ui-icon-pencil" title="Editar" />
+					<p:commandButton icon="ui-icon-circle-close" title="Excluir"
+						oncomplete="exclusaoClienteDialog.show(); return false;" />
+				</p:column>
+			</p:dataTable>
+
+			<p:confirmDialog header="Exclusao de Cliente"
+				widgetVar="exclusaoClienteDialog"
+				message="Tem certeza que deseja exlcuir o cliente?">
+				<p:commandButton value="Sim" update="clientesTable" process="@this"
+					oncomplete="exclusaoClienteDialog.hide(); return false;" />
+
+				<p:commandButton value="Nao" update="clientesTable"
+					oncomplete="exclusaoClienteDialog.hide(); return false;" />
+			</p:confirmDialog>
+
+		</h:form>
+	</ui:define>
+</ui:composition>
