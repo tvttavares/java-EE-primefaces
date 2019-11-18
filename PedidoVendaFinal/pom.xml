@@ -99,16 +99,16 @@
 			<version>3.1</version>
 			<scope>compile</scope>
 		</dependency>
-		
+
 		<!-- API de Servlet -->
 		<dependency>
-	        <groupId>javax.servlet</groupId>
-	        <artifactId>javax.servlet-api</artifactId>
-	        <version>3.0.1</version>
-	        <scope>provided</scope>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
 		</dependency>
-		
-		<!-- Abstração para envio de e-mails -->		
+
+		<!-- Abstração para envio de e-mails -->
 		<dependency>
 			<groupId>com.outjected</groupId>
 			<artifactId>simple-email</artifactId>
@@ -121,6 +121,22 @@
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
 			<version>1.4.7</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Usamos para templates de emails -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.7</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Usamos para formatar números em templates -->
+		<dependency>
+			<groupId>velocity-tools</groupId>
+			<artifactId>velocity-tools-generic</artifactId>
+			<version>1.1</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
