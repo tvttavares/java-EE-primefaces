@@ -37,9 +37,10 @@ public class Usuarios implements Serializable {
 
 	public Usuario porEmail(String email) {
 		try {
-			return manager.createQuery("from Usuario where email = :email", Usuario.class).setParameter("email", email)
-					.getSingleResult();
+			return manager.createQuery("from Usuario where lower(email) = :email", Usuario.class)
+					.setParameter("email", email.toLowerCase()).getSingleResult();
 		} catch (NoResultException e) {
+			// nenhum usuario encontrado com o e-mail informado
 			return null;
 		}
 	}
