@@ -38,8 +38,8 @@
 		<h:form style="display: inline-block">
 			<p:menubar styleClass="menu-sistema">
 				<p:submenu label="Cadastros">
-					<p:menuitem value="Clientes" outcome="/clientes/PesquisaClientes" />
-					<p:menuitem value="Usuários" outcome="/usuarios/PesquisaUsuarios" />
+					<p:menuitem value="Clientes" />
+					<p:menuitem value="Usuários" />
 					<p:separator />
 					<p:menuitem value="Categorias" />
 					<p:menuitem value="Produtos" outcome="/produtos/PesquisaProdutos" />
@@ -48,7 +48,7 @@
 					<p:menuitem value="Novo pedido" outcome="/pedidos/CadastroPedido" />
 					<p:menuitem value="Pesquisa" outcome="/pedidos/PesquisaPedidos" />
 				</p:submenu>
-				<p:menuitem value="Sair" />
+				<p:menuitem value="Sair" url="/j_spring_security_logout" />
 			</p:menubar>
 		</h:form>
 	</div>
