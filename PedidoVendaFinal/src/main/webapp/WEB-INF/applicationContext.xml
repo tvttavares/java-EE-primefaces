@@ -7,17 +7,24 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<http auto-config="true">
-		<intercept-url pattern="/**"
-			access="ROLE_ADMINISTRADORES" />
+	<http pattern="/javax.faces.resource/**" security="none" />
+
+	<http auto-config="true" use-expressions="true">
+		<intercept-url pattern="/Home.xhtml"
+			access="isAuthenticated()" />
+		<intercept-url pattern="/pedidos/**"
+			access="hasAnyRole('VENDEDORES', 'AUXILIARES', 'ADMINISTRADORES')" />
+		<intercept-url pattern="/produtos/**"
+			access="hasAnyRole('ADMINISTRADORES')" />
+		<intercept-url pattern="/**" access="denyAll" />
 	</http>
 
 	<authentication-manager>
 		<authentication-provider>
 			<user-service>
-				<user name="joao" password="joao" authorities="ROLE_VENDEDORES" />
+				<user name="joao" password="joao" authorities="VENDEDORES" />
 				<user name="manoel" password="manoel"
-					authorities="ROLE_ADMINISTRADORES" />
+					authorities="ADMINISTRADORES" />
 			</user-service>
 		</authentication-provider>
 	</authentication-manager>
