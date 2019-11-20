@@ -10,9 +10,11 @@
 	<beans:bean id="appUserDetailsService"
 		class="com.algaworks.pedidovenda.security.AppUserDetailsService" />
 
+	<http pattern="/Login.xhtml" security="none" />
+	<http pattern="/Erro.xhtml" security="none" />
 	<http pattern="/javax.faces.resource/**" security="none" />
 
-	<http auto-config="true" use-expressions="true">
+	<http auto-config="false" use-expressions="true">
 		<intercept-url pattern="/Home.xhtml"
 			access="isAuthenticated()" />
 		<intercept-url pattern="/pedidos/**"
@@ -20,12 +22,17 @@
 		<intercept-url pattern="/**"
 			access="hasAnyRole('ADMINISTRADORES')" />
 		<intercept-url pattern="/**" access="denyAll" />
+
+		<form-login login-page="/Login.xhtml"
+			authentication-failure-url="/Login.xhtml?invalid=true"
+			default-target-url="/" always-use-default-target="true" />
+		<logout logout-url="/j_spring_security_logout"
+			invalidate-session="true" />
 	</http>
 
 	<authentication-manager>
 		<authentication-provider
 			user-service-ref="appUserDetailsService">
-			<!-- entender senha em md5 -->
 			<!-- <password-encoder hash="md5" /> -->
 		</authentication-provider>
 	</authentication-manager>
