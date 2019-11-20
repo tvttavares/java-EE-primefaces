@@ -38,42 +38,45 @@ public class Pedidos implements Serializable {
 	@SuppressWarnings({ "unchecked" })
 	public Map<Date, BigDecimal> valoresTotaisPorData(Integer numeroDeDias, Usuario criadoPor) {
 		Session session = manager.unwrap(Session.class);
-
+		
 		numeroDeDias -= 1;
-
+		
 		Calendar dataInicial = Calendar.getInstance();
 		dataInicial = DateUtils.truncate(dataInicial, Calendar.DAY_OF_MONTH);
 		dataInicial.add(Calendar.DAY_OF_MONTH, numeroDeDias * -1);
-
+		
 		Map<Date, BigDecimal> resultado = criarMapaVazio(numeroDeDias, dataInicial);
-
+		
 		Criteria criteria = session.createCriteria(Pedido.class);
-
-		// select date(data_criacao) as data, sum(valor_total) as valor
-		// from pedido where data_criacao >= :dataInicial and vendedor_id = :criadoPor
+		
+		// select date(data_criacao) as data, sum(valor_total) as valor 
+		// from pedido where data_criacao >= :dataInicial and vendedor_id = :criadoPor 
 		// group by date(data_criacao)
-
+		
 		criteria.setProjection(Projections.projectionList()
-				.add(Projections.sqlGroupProjection("date(data_criacao) as data", "date(data_criacao)",
-						new String[] { "data" }, new Type[] { StandardBasicTypes.DATE }))
-				.add(Projections.sum("valorTotal").as("valor")))
-				.add(Restrictions.ge("dataCriacao", dataInicial.getTime()));
-
+				.add(Projections.sqlGroupProjection("date(data_criacao) as data", 
+						"date(data_criacao)", new String[] { "data" }, 
+						new Type[] { StandardBasicTypes.DATE } ))
+				.add(Projections.sum("valorTotal").as("valor"))
+			)
+			.add(Restrictions.ge("dataCriacao", dataInicial.getTime()));
+		
 		if (criadoPor != null) {
 			criteria.add(Restrictions.eq("vendedor", criadoPor));
 		}
-
-		List<DataValor> valoresPorData = criteria.setResultTransformer(Transformers.aliasToBean(DataValor.class))
-				.list();
-
+		
+		List<DataValor> valoresPorData = criteria
+				.setResultTransformer(Transformers.aliasToBean(DataValor.class)).list();
+		
 		for (DataValor dataValor : valoresPorData) {
 			resultado.put(dataValor.getData(), dataValor.getValor());
 		}
-
+		
 		return resultado;
 	}
 
-	private Map<Date, BigDecimal> criarMapaVazio(Integer numeroDeDias, Calendar dataInicial) {
+	private Map<Date, BigDecimal> criarMapaVazio(Integer numeroDeDias,
+			Calendar dataInicial) {
 		dataInicial = (Calendar) dataInicial.clone();
 		Map<Date, BigDecimal> mapaInicial = new TreeMap<>();
 
@@ -81,20 +84,20 @@ public class Pedidos implements Serializable {
 			mapaInicial.put(dataInicial.getTime(), BigDecimal.ZERO);
 			dataInicial.add(Calendar.DAY_OF_MONTH, 1);
 		}
-
+		
 		return mapaInicial;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	public List<Pedido> filtrados(PedidoFilter filtro) {
 		Session session = this.manager.unwrap(Session.class);
-
+		
 		Criteria criteria = session.createCriteria(Pedido.class)
 				// fazemos uma associação (join) com cliente e nomeamos como "c"
 				.createAlias("cliente", "c")
 				// fazemos uma associação (join) com vendedor e nomeamos como "v"
 				.createAlias("vendedor", "v");
-
+		
 		if (filtro.getNumeroDe() != null) {
 			// id deve ser maior ou igual (ge = greater or equals) a filtro.numeroDe
 			criteria.add(Restrictions.ge("id", filtro.getNumeroDe()));
@@ -108,29 +111,26 @@ public class Pedidos implements Serializable {
 		if (filtro.getDataCriacaoDe() != null) {
 			criteria.add(Restrictions.ge("dataCriacao", filtro.getDataCriacaoDe()));
 		}
-
+		
 		if (filtro.getDataCriacaoAte() != null) {
 			criteria.add(Restrictions.le("dataCriacao", filtro.getDataCriacaoAte()));
 		}
-
+		
 		if (StringUtils.isNotBlank(filtro.getNomeCliente())) {
-			// acessamos o nome do cliente associado ao pedido pelo alias "c", criado
-			// anteriormente
+			// acessamos o nome do cliente associado ao pedido pelo alias "c", criado anteriormente
 			criteria.add(Restrictions.ilike("c.nome", filtro.getNomeCliente(), MatchMode.ANYWHERE));
 		}
-
+		
 		if (StringUtils.isNotBlank(filtro.getNomeVendedor())) {
-			// acessamos o nome do vendedor associado ao pedido pelo alias "v", criado
-			// anteriormente
+			// acessamos o nome do vendedor associado ao pedido pelo alias "v", criado anteriormente
 			criteria.add(Restrictions.ilike("v.nome", filtro.getNomeVendedor(), MatchMode.ANYWHERE));
 		}
-
+		
 		if (filtro.getStatuses() != null && filtro.getStatuses().length > 0) {
-			// adicionamos uma restrição "in", passando um array de constantes da enum
-			// StatusPedido
+			// adicionamos uma restrição "in", passando um array de constantes da enum StatusPedido
 			criteria.add(Restrictions.in("status", filtro.getStatuses()));
 		}
-
+		
 		return criteria.addOrder(Order.asc("id")).list();
 	}
 
@@ -141,5 +141,5 @@ public class Pedidos implements Serializable {
 	public Pedido porId(Long id) {
 		return this.manager.find(Pedido.class, id);
 	}
-
+	
 }
